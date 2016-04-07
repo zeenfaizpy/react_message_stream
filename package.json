@@ -1,0 +1,32 @@
+{
+  "name": "react_message_stream",
+  "version": "1.0.0",
+  "description": "Message Stream built using Reactjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zeenfaizpy/react_message_stream.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zeenfaizpy/react_message_stream/issues"
+  },
+  "homepage": "https://github.com/zeenfaizpy/react_message_stream#readme",
+  "dependencies": {
+    "react": "^0.14.8",
+    "react-dom": "^0.14.8"
+  },
+  "devDependencies": {
+    "babel-core": "^6.7.4",
+    "babel-loader": "^6.2.4",
+    "babel-preset-es2015": "^6.6.0",
+    "babel-preset-react": "^6.5.0",
+    "webpack": "^1.12.14",
+    "webpack-dev-server": "^1.14.1"
+  }
+}
