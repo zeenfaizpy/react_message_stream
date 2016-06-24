@@ -1,4 +1,5 @@
 import React from 'react'
+import ReactDOM from 'react-dom'
 
 
 var Todo = function(props){
@@ -6,7 +7,6 @@ var Todo = function(props){
         <li>{props.name}</li>
     )
 }
-
 
 var TodoList = React.createClass({
     render: function(){
@@ -33,6 +33,8 @@ var Form = React.createClass({
     handleClick: function(e){
         this.props.onFormSubmit({'name': this.state.name});
         this.setState({'name': ''});
+        //ReactDOM.findDOMNode(this.refs.input_box).focus();
+        this.refs.input_box.focus()
     },
     handleChange: function(e){
         this.setState({'name': e.target.value});
@@ -40,7 +42,7 @@ var Form = React.createClass({
     render: function(){
         return (
             <div>
-                <input type="text" name="todo_item" onChange={this.handleChange} value={this.state.name} />
+                <input type="text" name="todo_item" ref="input_box" onChange={this.handleChange} value={this.state.name} />
                 <button name="add" onClick={this.handleClick}>Add</button>
             </div>
         )
@@ -71,7 +73,6 @@ export var App = React.createClass({
         this.setState({todos: all_items})
     },
     render: function(){
-        
         return (
             <div>
                 <Form onFormSubmit={this.handleSubmit} />
