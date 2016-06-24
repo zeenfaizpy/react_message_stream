@@ -1,13 +1,15 @@
+var HtmlWebpackPlugin = require('html-webpack-plugin');
+var HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
+    template: __dirname + '/src/index.html',
+    filename: 'index.html',
+    inject: 'body'
+})
+
 module.exports = {
-    entry: "./src/main.js",
+    entry: "./src/index.js",
     output: {
-        path: "./src",
+        path: __dirname + "/dist",
         filename: "bundle.js",
-    },
-    devServer: {
-        inline: true,
-        contentBase: './src',
-        port: 8100
     },
     module: {
         loaders: [
@@ -17,5 +19,6 @@ module.exports = {
                 loader: 'babel-loader',
             }
         ]
-    }
+    },
+    plugins: [HtmlWebpackPluginConfig]
 }
