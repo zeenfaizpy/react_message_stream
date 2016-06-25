@@ -2,28 +2,6 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 
-var Todo = function(props){
-    return (
-        <li>{props.name}</li>
-    )
-}
-
-var TodoList = React.createClass({
-    render: function(){
-        return (
-            <div>
-                <ul>
-                    {this.props.todos.map(function(todo){
-                        return (
-                            <Todo key={todo.id} name={todo.name} />
-                        )
-                    })}
-                </ul>
-            </div>
-        )
-    }
-})
-
 var Form = React.createClass({
     getInitialState: function(){
         return {
@@ -49,17 +27,47 @@ var Form = React.createClass({
     }
 })
 
+var TodoItem = React.createClass({
+    render: function(){
+        return (
+            <span>
+                {this.props.name}
+            </span>
+        )
+    }
+})
+
+var TodoList = React.createClass({
+    handleDelete: function(id){
+        //console.log(id)
+        this.props.handleDelete(id)
+    },
+    render: function(){
+        return (
+            <div>
+                {this.props.todos.map(function(todo){
+                    var id = todo.id
+                    var boundClick = this.handleDelete.bind(this, id)
+                    return (
+                        <div key={todo.id}>
+                            <TodoItem id={todo.id} name={todo.name} />
+                            <button onClick={boundClick}>X</button>
+                        </div>
+                    )
+                }, this)}
+            </div>
+        )
+    }
+})
+
+
 export var App = React.createClass({
     getInitialState: function(){
         return {
             todos: [
                 {
                     'id': 1,
-                    'name': 'Item 1',
-                },
-                {
-                    'id': 2,
-                    'name': 'Item 2',
+                    'name': 'item 1',
                 }
             ]
         }
@@ -72,11 +80,19 @@ export var App = React.createClass({
         var all_items = this.state.todos.concat([new_item])
         this.setState({todos: all_items})
     },
+    handleDelete: function(id){
+        var all_items = this.state.todos.filter(function(todo){
+            if(todo.id != id){
+                return todo
+            }
+        })
+        this.setState({todos: all_items})
+    },
     render: function(){
         return (
             <div>
                 <Form onFormSubmit={this.handleSubmit} />
-                <TodoList todos={this.state.todos} />
+                <TodoList todos={this.state.todos} handleDelete={this.handleDelete} />
             </div>
         )
     }
