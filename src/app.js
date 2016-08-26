@@ -35,9 +35,20 @@ var Form = React.createClass({
 
 var Todo = React.createClass({
     render: function(){
+        var divStyle = {
+            color: 'red',
+            textDecoration: 'line-through'
+        }
+        var span_item;
+        if(this.props.item.is_complete){
+            span_item = <span style={divStyle} onClick={this.props.onClick}>{this.props.name}</span>
+        }
+        else{
+            span_item = <span onClick={this.props.onClick}>{this.props.name}</span>
+        }
         return (
             <div>
-                <span>{this.props.name}</span>
+                {span_item}
                 <button onClick={this.props.onDelete}>X</button>
             </div>
         )
@@ -48,10 +59,13 @@ var TodoList = React.createClass({
     handleDelete: function(id){
         this.props.handleDelete(id)
     },
+    handleClick: function(id){
+        this.props.handleClick(id)
+    },
     render: function(){
         var todos = this.props.todos.map(function(todo){
             return (
-                <Todo key={todo.id} name={todo.name} id={todo.id} onDelete={this.handleDelete.bind(this, todo.id)} />
+                <Todo key={todo.id} name={todo.name} id={todo.id} item={todo} onDelete={this.handleDelete.bind(this, todo.id)} onClick={this.handleClick.bind(this, todo.id)} />
             )
         }, this)
         return (
@@ -61,9 +75,20 @@ var TodoList = React.createClass({
 })
 
 var CountBox = React.createClass({
+    getCompletedItems: function(todos){
+        var completed_items = todos.filter(function(todo){
+            if(todo.is_complete){
+                return todo
+            }
+        })
+        return completed_items
+    },
     render: function(){
         return (
-            <div>Total Items: {this.props.todos.length}</div>
+            <div>
+                <div>Total Items: {this.props.todos.length}</div>
+                <div>Completed Items: {this.getCompletedItems(this.props.todos).length}</div>
+            </div>
         )
     }
 })
@@ -78,7 +103,8 @@ export var App = React.createClass({
     handleSubmit: function(item){
         var new_item = {
             'id': this.state.todos.length + 1,
-            'name': item.name
+            'name': item.name,
+            'is_complete': false,
         }
         var all_items = this.state.todos.concat([new_item])
         this.setState({todos: all_items})
@@ -91,11 +117,21 @@ export var App = React.createClass({
         })
         this.setState({todos: all_items})
     },
+    handleClick: function(id){
+        var all_items = this.state.todos.map(function(todo){
+            if(todo.id == id){
+                todo.is_complete = !todo.is_complete
+                return todo
+            }
+            return todo
+        })
+        this.setState({todos: all_items})
+    },
     render: function(){
         return (
             <div>
                 <Form onFormSubmit={this.handleSubmit} />
-                <TodoList todos={this.state.todos} handleDelete={this.handleDelete.bind(this)} />
+                <TodoList todos={this.state.todos} handleDelete={this.handleDelete} handleClick={this.handleClick}/>
                 <CountBox todos={this.state.todos} />
             </div>
         )
