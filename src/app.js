@@ -60,6 +60,14 @@ var TodoList = React.createClass({
     }
 })
 
+var CountBox = React.createClass({
+    render: function(){
+        return (
+            <div>Total Items: {this.props.todos.length}</div>
+        )
+    }
+})
+
 
 export var App = React.createClass({
     getInitialState: function(){
@@ -88,6 +96,7 @@ export var App = React.createClass({
             <div>
                 <Form onFormSubmit={this.handleSubmit} />
                 <TodoList todos={this.state.todos} handleDelete={this.handleDelete.bind(this)} />
+                <CountBox todos={this.state.todos} />
             </div>
         )
     }
