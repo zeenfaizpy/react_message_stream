@@ -9,53 +9,53 @@ var Form = React.createClass({
         }
     },
     handleClick: function(e){
-        this.props.onFormSubmit({'name': this.state.name});
-        this.setState({'name': ''});
-        //ReactDOM.findDOMNode(this.refs.input_box).focus();
+        if(this.state.name){
+            this.props.onFormSubmit({'name': this.state.name});
+            this.setState({'name': ''});
+        }
         this.refs.input_box.focus()
     },
     handleChange: function(e){
         this.setState({'name': e.target.value});
     },
+    handleKeyPress: function(e) {
+        if (e.key === 'Enter') {
+            this.handleClick(e);
+        }
+    },
     render: function(){
         return (
             <div>
-                <input type="text" name="todo_item" ref="input_box" onChange={this.handleChange} value={this.state.name} />
-                <button name="add" onClick={this.handleClick}>Add</button>
+                <input type="text" name="todo_item" ref="input_box" onKeyPress={this.handleKeyPress} onChange={this.handleChange} value={this.state.name} />
+                <button name="add" onClick={this.handleClick}>Add to List</button>
             </div>
         )
     }
 })
 
-var TodoItem = React.createClass({
+var Todo = React.createClass({
     render: function(){
         return (
-            <span>
-                {this.props.name}
-            </span>
+            <div>
+                <span>{this.props.name}</span>
+                <button onClick={this.props.onDelete}>X</button>
+            </div>
         )
     }
 })
 
 var TodoList = React.createClass({
     handleDelete: function(id){
-        //console.log(id)
         this.props.handleDelete(id)
     },
     render: function(){
+        var todos = this.props.todos.map(function(todo){
+            return (
+                <Todo key={todo.id} name={todo.name} id={todo.id} onDelete={this.handleDelete.bind(this, todo.id)} />
+            )
+        }, this)
         return (
-            <div>
-                {this.props.todos.map(function(todo){
-                    var id = todo.id
-                    var boundClick = this.handleDelete.bind(this, id)
-                    return (
-                        <div key={todo.id}>
-                            <TodoItem id={todo.id} name={todo.name} />
-                            <button onClick={boundClick}>X</button>
-                        </div>
-                    )
-                }, this)}
-            </div>
+            <div>{todos}</div>
         )
     }
 })
@@ -64,12 +64,7 @@ var TodoList = React.createClass({
 export var App = React.createClass({
     getInitialState: function(){
         return {
-            todos: [
-                {
-                    'id': 1,
-                    'name': 'item 1',
-                }
-            ]
+            todos: []
         }
     },
     handleSubmit: function(item){
@@ -92,7 +87,7 @@ export var App = React.createClass({
         return (
             <div>
                 <Form onFormSubmit={this.handleSubmit} />
-                <TodoList todos={this.state.todos} handleDelete={this.handleDelete} />
+                <TodoList todos={this.state.todos} handleDelete={this.handleDelete.bind(this)} />
             </div>
         )
     }
